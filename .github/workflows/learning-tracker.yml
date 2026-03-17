@@ -1,0 +1,56 @@
+name: 📚 Learning Progress Tracker
+
+on:
+  push:
+    paths:
+      - 'projects/**'
+  workflow_dispatch:
+
+jobs:
+  track-progress:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Count completed projects
+        run: |
+          echo "## 📚 Learning Progress" > PROGRESS.md
+          echo "" >> PROGRESS.md
+          echo "*Auto-generated: $(date +'%Y-%m-%d %H:%M UTC')*" >> PROGRESS.md
+          echo "" >> PROGRESS.md
+          echo "| Project | Status | Files |" >> PROGRESS.md
+          echo "|---------|--------|-------|" >> PROGRESS.md
+
+          TOTAL=0
+          DONE=0
+          
+          for dir in projects/*/; do
+            TOTAL=$((TOTAL + 1))
+            NAME=$(basename $dir)
+            # Count code files
+            CODE_COUNT=$(find "$dir" -name "*.py" -o -name "*.json" -o -name "*.js" 2>/dev/null | grep -c . || echo 0)
+            
+            if [ "$CODE_COUNT" -gt 0 ]; then
+              DONE=$((DONE + 1))
+              STATUS="✅ Done"
+            else
+              STATUS="⬜ Todo"
+            fi
+            
+            echo "| $NAME | $STATUS | $CODE_COUNT files |" >> PROGRESS.md
+          done
+
+          echo "" >> PROGRESS.md
+          echo "**📊 Progress: $DONE / $TOTAL projects completed**" >> PROGRESS.md
+          
+          cat PROGRESS.md
+
+      - name: Commit
+        run: |
+          git config user.email "action@github.com"
+          git config user.name "GitHub Actions"
+          git add PROGRESS.md
+          git diff --staged --quiet || (git commit -m "📚 Progress update: $(date +'%Y-%m-%d')" && git push)

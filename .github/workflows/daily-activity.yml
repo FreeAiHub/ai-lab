@@ -1,0 +1,34 @@
+name: 🔄 Daily Activity Sync
+
+on:
+  schedule:
+    - cron: '0 9 * * 1-5'  # Mon-Fri 11:00 Lisbon
+  workflow_dispatch:
+
+jobs:
+  daily-sync:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Update activity log
+        run: |
+          mkdir -p logs
+          DATE=$(date +'%Y-%m-%d')
+          WEEK=$(date +'%Y-W%V')
+          
+          echo "$DATE - daily sync" >> logs/activity.log
+          
+          # Count total files in repo
+          FILE_COUNT=$(find . -not -path './.git/*' -type f | wc -l)
+          echo "Files in repo: $FILE_COUNT" >> logs/activity.log
+
+      - name: Commit activity
+        run: |
+          git config user.email "action@github.com"
+          git config user.name "GitHub Actions"
+          git add logs/
+          git diff --staged --quiet || (git commit -m "🔄 Daily sync $(date +'%Y-%m-%d')" && git push)
