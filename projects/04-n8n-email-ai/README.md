@@ -45,8 +45,8 @@ docker compose up -d
 ```
 1. Open Telegram, find @BotFather
 2. Send: /newbot
-3. Set name: "Alexandre AI Assistant"
-4. Set username: alexandre_ai_bot
+3. Set name: "<your_bot_name>"
+4. Set username: <your_bot_name>_bot
 5. Get TOKEN: 1234567890:ABCdef...
 
 In n8n:
@@ -56,8 +56,10 @@ In n8n:
 
 ## Save workflows to Git
 
+Export each workflow to `projects/04-n8n-email-ai/workflows/` (run from the repo root):
+
 ```bash
-mkdir -p workflows/
-# n8n UI → workflow → ⋮ → Export → save JSON here
-git add workflows/ && git commit -m "✅ Project 4: email AI workflow"
+mkdir -p projects/04-n8n-email-ai/workflows/
+# n8n UI → workflow → ⋮ → Export → save JSON into that folder
+git add projects/04-n8n-email-ai/workflows/ && git commit -m "✅ Project 4: email AI workflow"
 ```
