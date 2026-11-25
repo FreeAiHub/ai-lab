@@ -6,6 +6,10 @@ on:
       - 'projects/**'
   workflow_dispatch:
 
+concurrency:
+  group: learning-tracker
+  cancel-in-progress: false
+
 jobs:
   track-progress:
     runs-on: ubuntu-latest
@@ -31,7 +35,7 @@ jobs:
             TOTAL=$((TOTAL + 1))
             NAME=$(basename $dir)
             # Count code files
-            CODE_COUNT=$(find "$dir" -name "*.py" -o -name "*.json" -o -name "*.js" 2>/dev/null | grep -c . || echo 0)
+            CODE_COUNT=$(find "$dir" -type f \( -name '*.py' -o -name '*.json' -o -name '*.js' \) | wc -l)
             
             if [ "$CODE_COUNT" -gt 0 ]; then
               DONE=$((DONE + 1))
@@ -53,4 +57,4 @@ jobs:
           git config user.email "action@github.com"
           git config user.name "GitHub Actions"
           git add PROGRESS.md
-          git diff --staged --quiet || (git commit -m "📚 Progress update: $(date +'%Y-%m-%d')" && git push)
+          git diff --staged --quiet || (git commit -m "📚 Progress update: $(date +'%Y-%m-%d')" && git pull --rebase && git push)
