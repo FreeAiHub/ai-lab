@@ -1,0 +1,34 @@
+# Environment files (keep the examples)
+.env
+.env.*
+!.env.example
+
+# Local data and volumes
+data/
+volumes/
+**/data/
+**/volumes/
+qdrant_storage/
+ollama_models/
+flowise_data/
+n8n_data/
+open_webui_data/
+.flowise/
+.n8n/
+
+# Logs and temp files
+*.log
+!logs/activity.log
+tmp/
+*.tmp
+
+# OS junk
+.DS_Store
+Thumbs.db
+desktop.ini
+._*
+
+# Editors
+.idea/
+.vscode/
+*.swp
