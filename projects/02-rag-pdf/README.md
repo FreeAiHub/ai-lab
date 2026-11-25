@@ -170,3 +170,29 @@ python rag_pipeline.py
 4. Try with your CV PDF from the CV repo
 
 ## ➡️ Next: [Project 3 — AI Agent](../03-agent-websearch/)
+
+## Run it
+
+Needs Docker and [Ollama](https://ollama.com) running locally. No API key required.
+
+```bash
+# 1. Start Qdrant (from the repo root)
+docker compose -f docker/qdrant/docker-compose.yml up -d
+
+# 2. Pull the models (names are set in .env)
+ollama pull nomic-embed-text
+ollama pull llama3.2
+
+# 3. Install dependencies and configure
+cd projects/02-rag-pdf
+python3 -m venv venv && source venv/bin/activate
+pip install -r requirements.txt
+cp .env.example .env
+
+# 4. Ingest a PDF and ask questions
+python rag_pipeline.py path/to/file.pdf
+# Later, query the stored collection without re-ingesting:
+python rag_pipeline.py --ask-only
+```
+
+The version in this folder uses `query_points` (Qdrant) and `langchain_text_splitters`, and calls Ollama instead of OpenAI.
