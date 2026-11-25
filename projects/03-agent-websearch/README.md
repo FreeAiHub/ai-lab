@@ -4,6 +4,8 @@
 **Time:** 2-3 hours  
 **Stack:** Python + LangChain + Tavily API
 
+> **Note:** LangChain imports move between releases (`create_react_agent`, `AgentExecutor`, `hub` and `langchain_community` locations have changed). Verify against the current LangChain docs before running; the file does not pin versions.
+
 ---
 
 ## Setup
@@ -26,6 +28,7 @@ from langchain_community.tools.tavily_search import TavilySearchResults
 from langchain import hub
 from langchain.tools import tool
 from datetime import datetime
+from zoneinfo import ZoneInfo
 
 # 1. LLM
 llm = ChatOpenAI(model="gpt-4o-mini", temperature=0)
@@ -34,7 +37,7 @@ llm = ChatOpenAI(model="gpt-4o-mini", temperature=0)
 @tool
 def get_current_time() -> str:
     """Returns current date and time in Lisbon timezone"""
-    return datetime.now().strftime("%Y-%m-%d %H:%M (UTC)")
+    return datetime.now(ZoneInfo("Europe/Lisbon")).strftime("%Y-%m-%d %H:%M (%Z)")
 
 search = TavilySearchResults(max_results=3)
 tools = [search, get_current_time]
@@ -86,12 +89,43 @@ This is **ReAct pattern** (Reasoning + Acting) — the foundation of all AI agen
 ## Add more tools
 
 ```python
+import ast
+import operator
+
+_BIN_OPS = {
+    ast.Add: operator.add,
+    ast.Sub: operator.sub,
+    ast.Mult: operator.mul,
+    ast.Div: operator.truediv,
+    ast.Pow: operator.pow,
+    ast.Mod: operator.mod,
+    ast.FloorDiv: operator.floordiv,
+}
+_UNARY_OPS = {ast.UAdd: operator.pos, ast.USub: operator.neg}
+
+
+def _safe_eval(node):
+    if isinstance(node, ast.Expression):
+        return _safe_eval(node.body)
+    if (isinstance(node, ast.Constant)
+            and isinstance(node.value, (int, float))
+            and not isinstance(node.value, bool)):
+        return node.value
+    if isinstance(node, ast.BinOp) and type(node.op) in _BIN_OPS:
+        left, right = _safe_eval(node.left), _safe_eval(node.right)
+        if isinstance(node.op, ast.Pow) and abs(right) > 100:
+            raise ValueError("exponent too large")
+        return _BIN_OPS[type(node.op)](left, right)
+    if isinstance(node, ast.UnaryOp) and type(node.op) in _UNARY_OPS:
+        return _UNARY_OPS[type(node.op)](_safe_eval(node.operand))
+    raise ValueError("unsupported expression")
+
+
 @tool
 def calculate(expression: str) -> str:
     """Evaluate a mathematical expression. Input: math expression string."""
     try:
-        result = eval(expression, {"__builtins__": {}}, {})
-        return str(result)
+        return str(_safe_eval(ast.parse(expression.strip(), mode="eval")))
     except Exception as e:
         return f"Error: {e}"
 
