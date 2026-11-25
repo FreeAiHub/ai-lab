@@ -8,15 +8,16 @@ services:
     container_name: flowise
     restart: unless-stopped
     ports:
-      - "3000:3000"
+      - "127.0.0.1:3000:3000"
     volumes:
       - flowise_data:/root/.flowise
     env_file:
-      - .env
+      - path: .env
+        required: false
     environment:
       - PORT=3000
       - FLOWISE_USERNAME=${FLOWISE_USERNAME:-admin}
-      - FLOWISE_PASSWORD=${FLOWISE_PASSWORD:-flowise123}
+      - FLOWISE_PASSWORD=${FLOWISE_PASSWORD:?set it in .env}
     healthcheck:
       test: ["CMD", "wget", "-qO-", "http://localhost:3000/api/v1/ping"]
       interval: 30s
