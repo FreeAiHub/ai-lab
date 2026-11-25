@@ -1,0 +1,44 @@
+name: Validate compose files
+
+on:
+  pull_request:
+    paths:
+      - 'docker/**'
+      - '.github/workflows/validate-compose.yml'
+  push:
+    branches:
+      - main
+    paths:
+      - 'docker/**'
+      - '.github/workflows/validate-compose.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    name: Validate ${{ matrix.stack }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        stack:
+          - flowise
+          - n8n
+          - open-webui
+          - qdrant
+          - full-stack
+    defaults:
+      run:
+        working-directory: docker/${{ matrix.stack }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Create .env from example
+        run: |
+          if [ -f .env.example ]; then
+            cp .env.example .env
+          fi
+
+      - name: Validate docker compose config
+        run: docker compose config -q
