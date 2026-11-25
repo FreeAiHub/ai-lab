@@ -21,7 +21,8 @@ here as a record of it. The last commit that added real content is 2026-03-17.
     Confirmation: `docker/open-webui/docker-compose.yml`.
   - `docker/qdrant/`: Qdrant on ports 6333 and 6334. Confirmation:
     `docker/qdrant/docker-compose.yml`.
-  - `docker/full-stack/`: all four together. Confirmation: `docker/full-stack/docker-compose.yml`.
+  - `docker/full-stack/`: all four together, plus Qdrant and Ollama as shared services. See
+    `docker/full-stack/README.md`. Confirmation: `docker/full-stack/docker-compose.yml`.
 - Every stack runs third-party images from Docker Hub or GitHub Container Registry. Own code
   here is limited to the Compose files and the two workflows.
 - `docker/flowise/.env.example` and `docker/full-stack/.env.example` ship an API-key
@@ -85,7 +86,6 @@ them in order. `docker/full-stack/docker-compose.yml` is the file to read for th
 - Dify is in the earlier README as a stack on port 80 with 4GB of RAM. There is no
   `docker/dify/` directory, so it is not here.
 - `projects/05-custom-rag/` was listed as a fifth project. It does not exist.
-- `docker/full-stack/` has no README of its own; the Compose file is the documentation.
 - No tests, no linting, no CI beyond one workflow that rebuilds `PROGRESS.md` when
   `projects/**` changes.
 - No `LICENSE` file. The repository is public, so the default terms apply.
