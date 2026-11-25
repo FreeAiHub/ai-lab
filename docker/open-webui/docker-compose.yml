@@ -9,7 +9,7 @@ services:
     container_name: ollama
     restart: unless-stopped
     ports:
-      - "11434:11434"
+      - "127.0.0.1:11434:11434"
     volumes:
       - ollama_models:/root/.ollama
     # GPU (NVIDIA): uncomment below
@@ -26,7 +26,7 @@ services:
     container_name: open-webui
     restart: unless-stopped
     ports:
-      - "8080:8080"
+      - "127.0.0.1:8080:8080"
     volumes:
       - open_webui_data:/app/backend/data
     environment:
