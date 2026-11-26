@@ -6,10 +6,30 @@
 
 ```bash
 cp .env.example .env
+# Set N8N_PASSWORD in .env (required)
 docker compose up -d
 ```
 
-Open → http://localhost:5678
+`N8N_PASSWORD` is required: `docker compose up` fails if it is not set, so copy `.env.example` to `.env` first. Basic auth is on; `N8N_USER` defaults to `admin`.
+
+Open → http://localhost:5678 and log in with those credentials.
+
+## Ports
+
+| Port | Service | Bound to |
+|------|---------|----------|
+| 5678 | n8n UI + webhooks | 127.0.0.1 (loopback only) |
+
+The port is published on loopback only, so n8n is not reachable from other machines.
+
+## Remote access
+
+Use an SSH tunnel instead of exposing the port:
+
+```bash
+ssh -L 5678:127.0.0.1:5678 user@your-server
+# then open http://localhost:5678 on your machine
+```
 
 ## AI Workflows to build
 
