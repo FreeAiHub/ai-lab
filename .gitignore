@@ -18,7 +18,6 @@ open_webui_data/
 
 # Logs and temp files
 *.log
-!logs/activity.log
 tmp/
 *.tmp
 

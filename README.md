@@ -9,8 +9,8 @@ software.
 Stacks are configured; no learning project has code yet.
 
 The repository used to commit a log line five days a week to keep the contribution
-graph green. That workflow was removed on 2026-09-22, and the log it wrote is still
-here as a record of it. The last commit that added real content is 2026-03-17.
+graph green. That workflow was removed on 2026-09-22, and the log it wrote has since
+been deleted. The last commit that added real content is 2026-03-17.
 
 ## What is in the repository
 
@@ -46,8 +46,8 @@ here as a record of it. The last commit that added real content is 2026-03-17.
     runs on pushes that touch `projects/**` and can be started manually.
 - `.gitignore` excludes `.env` and `.env.*` (but keeps `.env.example`), local data and
   volume directories (`data/`, `volumes/`, `qdrant_storage/`, `ollama_models/`,
-  `flowise_data/`, `n8n_data/`, `open_webui_data/`, `.flowise/`, `.n8n/`), `*.log` (except
-  `logs/activity.log`), temporary files, OS files and editor directories.
+  `flowise_data/`, `n8n_data/`, `open_webui_data/`, `.flowise/`, `.n8n/`), `*.log`,
+  temporary files, OS files and editor directories.
 
 ## Quick start
 
@@ -145,6 +145,6 @@ them in order. `docker/full-stack/docker-compose.yml` is the file to read for th
   or `.js` file, so adding any such file marks it done regardless of whether the project
   works. It currently reports 0 of 4.
 - No `LICENSE` file. The repository is public, so the default terms apply.
-- `logs/activity.log` counts files, not work. All 133 entries since 2026-03-18 read
-  "Files in repo: 21", while the sync kept running. That is why this README dates the
-  content, not the last commit.
+- The removed `logs/activity.log` counted files, not work. All 133 entries since
+  2026-03-18 read "Files in repo: 21", while the sync kept running. That is why this
+  README dates the content, not the last commit.
