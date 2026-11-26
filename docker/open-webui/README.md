@@ -17,6 +17,25 @@ docker exec ollama ollama pull nomic-embed-text  # 274MB
 
 Open → http://localhost:8080
 
+## Ports
+
+| Port | Service | Bound to |
+|------|---------|----------|
+| 8080 | Open WebUI | 127.0.0.1 (loopback only) |
+| 11434 | Ollama API | 127.0.0.1 (loopback only) |
+
+Both ports are published on loopback only, so they are not reachable from other machines.
+
+## Remote access
+
+Use an SSH tunnel instead of exposing the ports:
+
+```bash
+ssh -L 8080:127.0.0.1:8080 user@your-server
+# then open http://localhost:8080 on your machine
+# add -L 11434:127.0.0.1:11434 to reach the Ollama API too
+```
+
 ## Models for 8GB RAM Mac
 
 | Model | Size | Best for |

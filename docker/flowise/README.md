@@ -6,11 +6,31 @@
 
 ```bash
 cp .env.example .env
+# Set FLOWISE_PASSWORD in .env (required)
 # Add your OpenAI key to .env
 docker compose up -d
 ```
 
-Open → http://localhost:3000
+`FLOWISE_PASSWORD` is required: `docker compose up` fails if it is not set. The compose file loads `.env` as an optional `env_file`, so copy `.env.example` to `.env` first. `FLOWISE_USERNAME` defaults to `admin`.
+
+Open → http://localhost:3000 and log in with those credentials.
+
+## Ports
+
+| Port | Service | Bound to |
+|------|---------|----------|
+| 3000 | Flowise UI + API | 127.0.0.1 (loopback only) |
+
+The port is published on loopback only, so Flowise is not reachable from other machines.
+
+## Remote access
+
+Use an SSH tunnel instead of exposing the port:
+
+```bash
+ssh -L 3000:127.0.0.1:3000 user@your-server
+# then open http://localhost:3000 on your machine
+```
 
 ## What to build (in order)
 

@@ -10,6 +10,24 @@ docker compose up -d
 
 Dashboard → http://localhost:6333/dashboard
 
+## Ports
+
+| Port | Service | Bound to |
+|------|---------|----------|
+| 6333 | HTTP API + dashboard | 127.0.0.1 (loopback only) |
+| 6334 | gRPC API | 127.0.0.1 (loopback only) |
+
+Both ports are published on loopback only, so they are not reachable from other machines.
+
+## Remote access
+
+Use an SSH tunnel instead of exposing the ports:
+
+```bash
+ssh -L 6333:127.0.0.1:6333 -L 6334:127.0.0.1:6334 user@your-server
+# then use http://localhost:6333 on your machine
+```
+
 ## Python quickstart
 
 ```python
